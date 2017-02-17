@@ -3,7 +3,7 @@ main file of the RGH Door opening Project this implements the main loop
 """
 
 
-
+#todo make wrapper class fot the rfid tags
 import signal
 import sys
 import dbconnection
