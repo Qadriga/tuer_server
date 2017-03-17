@@ -2,6 +2,8 @@
 module to handle the database query for the authentification
 """
 import MySQLdb
+
+
 def check_user(RFID=[]):
     """
     checks if the user is in the data base
@@ -26,21 +28,26 @@ def check_user(RFID=[]):
     unix_socket
       string, location of unix_s
       """
-    con = MySQLdb.connect(host="127.0.0.1", user="pi" , db="tuer", passwd='raspberry')
+    con = MySQLdb.connect(host="127.0.0.1", user="pi", db="tuer", passwd='raspberry')
     cur = con.cursor()
     try:
         query = str()
         query_elements = list()
-        if not (isinstance(RFID,list)):
+        if not (isinstance(RFID, list)):
             return False
-        # cur.execute()
+        # bring the rfid into a string form
+        query = "SELECT * FROM tuer WHERE rfid=%s"
+        cur.execute(query, query_elements)
+        result = cur.fetchall()
+        if result is not None:
+            return True
         # todo make string magik here
     except MySQLdb.Error, e:
         print(e.message)
+        return False
     finally:
         if con:
             con.close()
-
 
 
 if __name__ == '__main__':
