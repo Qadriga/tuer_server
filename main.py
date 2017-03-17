@@ -64,9 +64,27 @@ def poll_signal():
             lcd.backlight()
             lcd.clear()
             lcd.printString("Check RFID-Tag", 0)
-            status, ID = RFID_Reader.MFRC522_Anticoll()
+            status, rfid = RFID_Reader.MFRC522_Anticoll()
             if status == RFID_Reader.MI_OK:
-                pass
+                if dbconnection.check_user(rfid):  # this will return true if id is valid
+                    lcd.printString("Welcome :-)", lcd.LINE_1)
+                    lcd.printString("Door will open", lcd.LINE_2)
+                    for i in range(0, 5):
+                        lcd.noBacklight()
+                        time.sleep(0.5)
+                        lcd.backlight()
+                        time.sleep(0.5)
+                else:
+                    lcd.printString("Invalid Tag", lcd.LINE_1)
+                    lcd.printString("Door will not open", lcd.LINE_2)
+                    time.sleep(5)
+            else:
+                lcd.printString("Error while Reading", lcd.LINE_1)
+                time.sleep(5)
+            lcd.clear()
+            lcd.noBacklight()
+
+
 
 
 
