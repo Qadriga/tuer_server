@@ -1,7 +1,13 @@
 """
 module to handle the database query for the authentification
 """
-import MySQLdb
+try:
+    import MySQLdb
+except ImportError:
+    print "Installing MySql API"
+    import pip
+    pip.main(args=["install", "-r", "requirements.txt"])
+    import MySQLdb
 
 
 def check_user(RFID=[]):
