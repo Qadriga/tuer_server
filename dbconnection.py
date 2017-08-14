@@ -34,8 +34,12 @@ def check_user(RFID=[]):
     unix_socket
       string, location of unix_s
       """
-    con = MySQLdb.connect(host="127.0.0.1", user="pi", db="tuer", passwd='raspberry')
-    cur = con.cursor()
+    try:
+        con = MySQLdb.connect(host="127.0.0.1", user="pi", db="tuer", passwd='raspberry')
+        cur = con.cursor()
+    except MySQLdb.Error,e:
+        print(e.message)
+        return False
     try:
         query = str()
         query_elements = list()

@@ -7,8 +7,8 @@ main file of the RGH Door opening Project this implements the main loop
 import signal
 import sys
 import dbconnection
-#  import RPi.GPIO as GPIO
-import RPIO as GPIO
+import RPi.GPIO as GPIO
+#import RPIO as GPIO
 import time
 import LCD_I2C.lcd as lcd
 import RFID.MFRC522
@@ -20,7 +20,7 @@ lcd.initialize()
 lcd.clear()
 
 
-def shutdown():
+def shutdown(*args):
     """
     function to shutdown the application
     :return:
@@ -89,28 +89,10 @@ def poll_signal():
 
 
 
-signal.signal(signal.SIGINT, shutdown())  # attach the signal handler for shutdown to CTRL+C
-
-# GPIO Pins
-Interrupt_port = 0
-
-# varibaels for Interrupting
-Interrupt_edge = 'both'  # allowed values are 'both', 'rising', 'falling'
-
-GPIO.setmode(GPIO.BCM)
-if interrupt is True:
-    GPIO.setup(Interrupt_port, GPIO.IN)
-    GPIO.add_interrupt_callback(Interrupt_port, chip_check_isr, Interrupt_edge, debounce_timeout_ms=3000)
-    # attach the Interrupt handler only one interrupt every 3 seconds
+signal.signal(signal.SIGINT, shutdown)  # attach the signal handler for shutdown to CTRL+C
 
 try:
-    if interrupt is True:
-        GPIO.wait_for_interrupts()  # Let the Script run into a endless main loop
-    else:
-        poll_signal()
+    poll_signal()
 except KeyboardInterrupt:
-    if interrupt is True:
-        GPIO.stop_waiting_for_interrupts()  # stop waiting for interrupts
-    GPIO.cleanup()  # Clean up GPIO
     sys.exit(0)
 
