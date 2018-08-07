@@ -14,6 +14,7 @@ import MySQLdb.cursors
 
 SQLPASSWRD = None
 DOORID = None
+USERNAME = ""
 
 
 def append_rfid(RFID=[]):
@@ -57,9 +58,9 @@ def check_user(rfid=list()):
       """
     try:
         con = MySQLdb.connect(host="127.0.0.1",
-                              user="p52692",
+                              user=USERNAME,
                               db="usr_p52692_2",
-                              passwd="zWg9iDkF",
+                              passwd=SQLPASSWRD,
                               port=int(3307),
                               cursorclass=MySQLdb.cursors.DictCursor)
         # try to connect to the database on port 3307
