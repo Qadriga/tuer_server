@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"
+		?>
+<root xmlns="http://www.example.org/ConfigSchema" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.example.org/ConfigSchema ConfigSchema.xsd">
+  <SSHUSERNAME>SSH User of the Day</SSHUSERNAME>
+  <sshkeyfilepath>/path/to/file</sshkeyfilepath>
+  <REMOTEDATABASEUSERNAME>Databaseuser1</REMOTEDATABASEUSERNAME>
+  <REMOTEDATABASEPASSWORD>PASSWORD</REMOTEDATABASEPASSWORD>
+  <REMOTEDATABASENAME>Database1</REMOTEDATABASENAME>
+  <LOCALDATABASENAME>Database2</LOCALDATABASENAME>
+  <LOCALDATABASEUSERNAME>Databaseuser2</LOCALDATABASEUSERNAME>
+  <LOCALDATABASEPASSWORD>PASSWORD</LOCALDATABASEPASSWORD>
+  <DOORID>010</DOORID>
+</root>

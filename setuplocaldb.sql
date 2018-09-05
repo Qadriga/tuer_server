@@ -1,0 +1,6 @@
+CREATE TABLE allowedUsers IF NOT EXISTS(
+    
+)
+CREATE TABLE loggin IF NOT EXISTS(
+)
+

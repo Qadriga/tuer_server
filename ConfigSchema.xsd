@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/ConfigSchema" xmlns:tns="http://www.example.org/ConfigSchema" elementFormDefault="qualified">
+
+    <element name="root">
+    	<complexType>
+    		<sequence>
+    			<element name="SSHUSERNAME" type="string"></element>
+    			<element name="sshkeyfilepath" type="string"></element>
+    			<element name="REMOTEDATABASEUSERNAME" type="string"></element>
+    			<element name="REMOTEDATABASEPASSWORD" type="string"></element>
+    			<element name="REMOTEDATABASENAME" type="string"></element>
+    			<element name="LOCALDATABASENAME" type="string"></element>
+    			<element name="LOCALDATABASEUSERNAME" type="string"></element>
+    			<element name="LOCALDATABASEPASSWORD" type="string"></element>
+    			<element name="DOORID" type="int"></element>
+    		</sequence>
+    	</complexType>
+    </element>
+</schema>

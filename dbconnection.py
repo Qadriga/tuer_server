@@ -1,10 +1,12 @@
 """
 module to handle the database query for the authentification
 """
+
+from configLoader import ProjectConfiguration
 try:
     import MySQLdb
 except ImportError:
-    print "Installing MySql API"
+    print("Installing MySql API")
     import pip
     pip.main(args=["install", "-r", "requirements.txt"])
     import MySQLdb
@@ -12,10 +14,10 @@ except ImportError:
 import MySQLdb.cursors
 
 
-SQLPASSWRD = None
-DOORID = None
-USERNAME = ""
-
+SQLPASSWRD = ProjectConfiguration().getLocalDatabasePassword()
+USERNAME = ProjectConfiguration().getLocalDatabaseUsername()
+DATABASENAME = ProjectConfiguration().getLocalDatabaseName()
+DOORID = ProjectConfiguration().getDOORID()
 
 def append_rfid(RFID=[]):
     """
@@ -31,6 +33,20 @@ def append_rfid(RFID=[]):
         res = res | (elem << (RFID.index(elem)*8))
     return res
 
+def validate_schema():
+    con = MySQLdb.Connect(user=USERNAME,
+                          passwd=SQLPASSWRD,
+                          db=DATABASENAME,
+                          cursorclass=MySQLdb.cursors.DictCursor)
+    cur = con.cursor()
+    query = "SELECT * FROM information_schema.tables WHERE table_name=%s"
+    cur.execute(query)
+    res = cur.fetchone()
+    if res is None:
+        with open('setuplocaldb.sql', 'r') as f:
+            query += f.read()
+        cur.execute(query) # create the database with the schema in seruplocaldb.sql file 
+    con.close()
 
 def check_user(rfid=list()):
     """
@@ -49,9 +65,7 @@ def check_user(rfid=list()):
 
     db
       string, database to use
-
-    port
-      integer, TCP/IP port to connect to
+    
 
     unix_socket
       string, location of unix_s
@@ -59,12 +73,9 @@ def check_user(rfid=list()):
     try:
         con = MySQLdb.connect(host="127.0.0.1",
                               user=USERNAME,
-                              db="usr_p52692_2",
-                              passwd=SQLPASSWRD,
-                              port=int(3307),
+                              db=DATABASENAME,
+                              passwd=SQLPASSWRD,                              
                               cursorclass=MySQLdb.cursors.DictCursor)
-        # try to connect to the database on port 3307
-        # sshtunnel establish the connection thought the remote server
         cur = con.cursor()
     except MySQLdb.Error, e:
         print(e)
@@ -100,12 +111,7 @@ def check_user(rfid=list()):
             con.close()
 
 
-def read_conf():
-    global SQLPASSWRD
-    SQLPASSWRD = 'zWg9iDkF'
-    global DOORID
-    DOORID = '010'
-read_conf()
+
 
 if __name__ == '__main__':
     print("Checking database Connection")
