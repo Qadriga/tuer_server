@@ -12,12 +12,12 @@ except ImportError:
     import MySQLdb
 
 import MySQLdb.cursors
+import os
 
-
-SQLPASSWRD = ProjectConfiguration().getLocalDatabasePassword()
-USERNAME = ProjectConfiguration().getLocalDatabaseUsername()
-DATABASENAME = ProjectConfiguration().getLocalDatabaseName()
-DOORID = ProjectConfiguration().getDOORID()
+SQLPASSWRD = ProjectConfiguration.getLocalDatabasePassword()
+USERNAME = ProjectConfiguration.getLocalDatabaseUsername()
+DATABASENAME = ProjectConfiguration.getLocalDatabaseName()
+DOORID = ProjectConfiguration.getDOORID()
 
 def append_rfid(RFID=[]):
     """
@@ -40,12 +40,12 @@ def validate_schema():
                           cursorclass=MySQLdb.cursors.DictCursor)
     cur = con.cursor()
     query = "SELECT * FROM information_schema.tables WHERE table_name=%s"
-    cur.execute(query)
+    # print(query.format(('door',)))
+    cur.execute(query,['door',])
     res = cur.fetchone()
     if res is None:
-        with open('setuplocaldb.sql', 'r') as f:
-            query += f.read()
-        cur.execute(query) # create the database with the schema in seruplocaldb.sql file 
+        os.system("mysql --user=\"{0}\" --password=\"{1}\" < setuplocaldb.sql".format(USERNAME,SQLPASSWRD))        
+        
     con.close()
 
 def check_user(rfid=list()):
@@ -77,7 +77,7 @@ def check_user(rfid=list()):
                               passwd=SQLPASSWRD,                              
                               cursorclass=MySQLdb.cursors.DictCursor)
         cur = con.cursor()
-    except MySQLdb.Error, e:
+    except MySQLdb.Error as e:
         print(e)
         return False
     try:
@@ -90,11 +90,11 @@ def check_user(rfid=list()):
         # bring the rfid into a string form
         query = "SELECT %s FROM authorisations WHERE door_id=%s AND tag_id=%s" #
         own_build = query % tuple(query_elements)
-        print own_build
+        print(own_build)
         cur.execute(own_build)
         result = cur.fetchall()
 
-        print result
+        print(result)
         if result is not None:
             if not isinstance(result, (tuple, dict)):
                 return False
@@ -103,7 +103,7 @@ def check_user(rfid=list()):
             else:
                 return False
         # todo make string magik here
-    except MySQLdb.Error, e:
+    except MySQLdb.Error as e:
         print(e)
         return False
     finally:
@@ -114,6 +114,8 @@ def check_user(rfid=list()):
 
 
 if __name__ == '__main__':
+    validate_schema()
+    exit();
     print("Checking database Connection")
     read_conf()
     from time import time
@@ -121,5 +123,5 @@ if __name__ == '__main__':
     v = append_rfid([0xff, 0xfe, 0x02, 0x5, 0x1])
     # v = check_user(['123','456','789','000'])
     end = time()
-    print end - start
+    print(end - start)
     print(v)
