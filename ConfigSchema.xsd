@@ -13,6 +13,8 @@
     			<element name="LOCALDATABASEUSERNAME" type="string"></element>
     			<element name="LOCALDATABASEPASSWORD" type="string"></element>
     			<element name="DOORID" type="int"></element>
+    			<element name="SSHREMOTENAME" type="string"></element>
+    			<element name="SSHTUNNELNAME" type="string"></element>
     		</sequence>
     	</complexType>
     </element>

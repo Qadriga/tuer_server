@@ -17,6 +17,8 @@ class ProjectConfig:
             self.remotepasswd = root.findall("REMOTEDATABASEPASSWORD",root.nsmap)[0].text
             self.remotedatabasename = root.findall("REMOTEDATABASENAME",root.nsmap)[0].text
             self.doorid = root.findall("DOORID",root.nsmap)[0].text
+            self.sshremotename = root.findall("SSHREMOTENAME",root.nsmap)[0].text
+            self.sshtunnelname = root.findall("SSHTUNNELNAME",root.nsmap)[0].text
             
         def __str__(self):
             pass
@@ -50,6 +52,12 @@ class ProjectConfig:
     def getSSHkeyfilepath(self):
         return ProjectConfig.instance.sshkeyfile
     
+    def getSSHRemotename(self):
+        return ProjectConfig.instance.sshremotename
+    
+    def getSSHTunnelname(self):
+        return ProjectConfig.instance.sshtunnelname
+    
     def getDOORID(self):
         return ProjectConfig.instance.doorid
         
@@ -67,4 +75,6 @@ if __name__ == '__main__':
     print(ProjectConfiguration.getRemoteDatabasePassword())
     print(ProjectConfiguration.getSSHUsername())
     print(ProjectConfiguration.getSSHkeyfilepath())
+    print(ProjectConfiguration.getSSHRemotename())
+    print(ProjectConfiguration.getSSHTunnelname())
     
