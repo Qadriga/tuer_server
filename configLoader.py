@@ -1,9 +1,14 @@
 from lxml import etree as ET
+import os
+from shutil import copyfile
 class ProjectConfig:
     class __Singlton:
         def __init__(self):
             try:
-                tree = ET.parse("config.xml")
+                if not os.path.exists(os.getcwd()+os.sep+"own_config.xml"):
+                    copyfile(os.getcwd()+os.sep+"config.xml", os.getcwd()+os.sep+"own_config.xml")
+                    print("make a copy of the default config file")
+                tree = ET.parse("own_config.xml")
             except ET.XMLSyntaxError as err:
                 print("Your Configuration has Some Errors")
                 print(err.errmsg)
