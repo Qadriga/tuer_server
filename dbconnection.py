@@ -19,6 +19,7 @@ USERNAME = ProjectConfiguration.getLocalDatabaseUsername()
 DATABASENAME = ProjectConfiguration.getLocalDatabaseName()
 DOORID = ProjectConfiguration.getDOORID()
 
+
 def append_rfid(RFID=[]):
     """
 
@@ -33,20 +34,36 @@ def append_rfid(RFID=[]):
         res = res | (elem << (RFID.index(elem)*8))
     return res
 
+
 def validate_schema():
-    con = MySQLdb.Connect(user=USERNAME,
-                          passwd=SQLPASSWRD,
-                          db=DATABASENAME,
-                          cursorclass=MySQLdb.cursors.DictCursor)
+    print("Validating Schema with given Configuration")
+    try:
+        con = MySQLdb.Connect(user=USERNAME,
+                            passwd=SQLPASSWRD,
+                            db=DATABASENAME,
+                            cursorclass=MySQLdb.cursors.DictCursor)
+    except MySQLdb.MySQLError as e:
+        if e.args[0] == 1049:  # database not found
+            os.system("mysql --user=\"{0}\" --password=\"{1}\" < setuplocaldb.sql".format(USERNAME, SQLPASSWRD))
+            # if creation script was successfull try reconnect
+            con = MySQLdb.Connect(user=USERNAME,
+                            passwd=SQLPASSWRD,
+                            db=DATABASENAME,
+                            cursorclass=MySQLdb.cursors.DictCursor)
+
+
     cur = con.cursor()
-    query = "SELECT * FROM information_schema.tables WHERE table_name=%s"
+    query = "SELECT * FROM information_schema.tables WHERE table_schema=%s"
     # print(query.format(('door',)))
-    cur.execute(query,['door',])
-    res = cur.fetchone()
-    if res is None:
-        os.system("mysql --user=\"{0}\" --password=\"{1}\" < setuplocaldb.sql".format(USERNAME,SQLPASSWRD))        
-        
+    cur.execute(query, ['door', ])
+    res = cur.fetchall()
+    if res:
+        print(res[0])
+        os.system("mysql --user=\"{0}\" --password=\"{1}\" < setuplocaldb.sql".format(USERNAME, SQLPASSWRD))
+    else:
+        print(res)
     con.close()
+
 
 def check_user(rfid=list()):
     """
@@ -113,15 +130,13 @@ def check_user(rfid=list()):
 
 
 
+
 if __name__ == '__main__':
+    from time import time
     validate_schema()
     exit();
     print("Checking database Connection")
-    read_conf()
-    from time import time
-    start = time()
+
     v = append_rfid([0xff, 0xfe, 0x02, 0x5, 0x1])
     # v = check_user(['123','456','789','000'])
     end = time()
-    print(end - start)
-    print(v)

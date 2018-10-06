@@ -116,6 +116,7 @@ def poll_signal():
 signal.signal(signal.SIGINT, shutdown)  # attach the signal handler for shutdown to CTRL+C
 
 try:
+    dbconnection.validate_schema()  # check database
     poll_signal()
 except KeyboardInterrupt:
     GPIO.cleanup()
